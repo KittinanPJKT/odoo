@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Appraisal -->
+    <record id="tech_appraisal_view_list" model="ir.ui.view">
+        <field name="name">tech.appraisal.list</field>
+        <field name="model">tech.appraisal</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="employee_id"/>
+                <field name="department_id"/>
+                <field name="cycle_id"/>
+                <field name="manager_id"/>
+                <field name="avg_score"/>
+                <field name="state" widget="badge"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="tech_appraisal_view_form" model="ir.ui.view">
+        <field name="name">tech.appraisal.form</field>
+        <field name="model">tech.appraisal</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_start_self_review" type="object" string="Start Self Review"
+                            class="btn-primary" invisible="state != 'draft'"/>
+                    <button name="action_submit_self_review" type="object" string="Submit to Appraiser"
+                            class="btn-primary" invisible="state != 'self_review'"/>
+                    <button name="action_done" type="object" string="Mark as Done"
+                            class="btn-primary" invisible="state != 'manager_review'"/>
+                    <button name="action_reset" type="object" string="Reset to Draft"
+                            invisible="state == 'draft'" groups="hr.group_hr_user"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="employee_id"/>
+                            <field name="department_id"/>
+                        </group>
+                        <group>
+                            <field name="cycle_id"/>
+                            <field name="manager_id"/>
+                        </group>
+                    </group>
+                    <group string="Scores">
+                        <group>
+                            <field name="score_technical"/>
+                            <field name="score_teamwork"/>
+                            <field name="score_delivery"/>
+                        </group>
+                        <group>
+                            <field name="avg_score"/>
+                        </group>
+                    </group>
+                    <group string="Comments">
+                        <field name="self_comment" readonly="state not in ('draft', 'self_review')"/>
+                        <field name="manager_comment" readonly="state in ('draft', 'self_review', 'done')"/>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="tech_appraisal_view_kanban" model="ir.ui.view">
+        <field name="name">tech.appraisal.kanban</field>
+        <field name="model">tech.appraisal</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="state" group_create="0" records_draggable="0" sample="1">
+                <templates>
+                    <t t-name="card">
+                        <field name="employee_id" class="fw-bold"/>
+                        <field name="department_id" class="text-muted"/>
+                        <div>Score: <field name="avg_score"/></div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="tech_appraisal_view_search" model="ir.ui.view">
+        <field name="name">tech.appraisal.search</field>
+        <field name="model">tech.appraisal</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="employee_id"/>
+                <field name="cycle_id"/>
+                <field name="department_id"/>
+                <filter name="my" string="My Appraisals" domain="[('employee_id.user_id', '=', uid)]"/>
+                <filter name="team" string="My Team" domain="[('manager_id.user_id', '=', uid)]"/>
+                <group>
+                    <filter name="group_cycle" string="Cycle" context="{'group_by': 'cycle_id'}"/>
+                    <filter name="group_state" string="Status" context="{'group_by': 'state'}"/>
+                    <filter name="group_dept" string="Department" context="{'group_by': 'department_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="tech_appraisal_action" model="ir.actions.act_window">
+        <field name="name">Appraisals</field>
+        <field name="res_model">tech.appraisal</field>
+        <field name="view_mode">kanban,list,form</field>
+    </record>
+
+    <!-- Cycle -->
+    <record id="tech_appraisal_cycle_view_list" model="ir.ui.view">
+        <field name="name">tech.appraisal.cycle.list</field>
+        <field name="model">tech.appraisal.cycle</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name"/>
+                <field name="date_start"/>
+                <field name="date_end"/>
+                <field name="appraisal_count"/>
+                <field name="avg_score"/>
+                <field name="state" widget="badge"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="tech_appraisal_cycle_view_form" model="ir.ui.view">
+        <field name="name">tech.appraisal.cycle.form</field>
+        <field name="model">tech.appraisal.cycle</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_start" type="object" string="Start" class="btn-primary"
+                            invisible="state != 'draft'"/>
+                    <button name="action_close" type="object" string="Close" invisible="state != 'in_progress'"/>
+                    <button name="action_draft" type="object" string="Back to Draft" invisible="state == 'draft'"/>
+                    <button name="action_generate_appraisals" type="object" string="Generate Appraisals"
+                            invisible="state == 'closed'"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_open_appraisals" type="object" class="oe_stat_button" icon="fa-star">
+                            <field name="appraisal_count" widget="statinfo" string="Appraisals"/>
+                        </button>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="name"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                        <group>
+                            <field name="date_start"/>
+                            <field name="date_end"/>
+                            <field name="avg_score"/>
+                        </group>
+                    </group>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="tech_appraisal_cycle_action" model="ir.actions.act_window">
+        <field name="name">Appraisal Cycles</field>
+        <field name="res_model">tech.appraisal.cycle</field>
+        <field name="view_mode">list,form</field>
+    </record>
+</odoo>

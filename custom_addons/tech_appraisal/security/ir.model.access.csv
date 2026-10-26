@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_cycle_user,tech.appraisal.cycle user,model_tech_appraisal_cycle,base.group_user,1,0,0,0
+access_cycle_hr,tech.appraisal.cycle hr,model_tech_appraisal_cycle,hr.group_hr_user,1,1,1,1
+access_appraisal_user,tech.appraisal user,model_tech_appraisal,base.group_user,1,1,0,0
+access_appraisal_hr,tech.appraisal hr,model_tech_appraisal,hr.group_hr_user,1,1,1,1

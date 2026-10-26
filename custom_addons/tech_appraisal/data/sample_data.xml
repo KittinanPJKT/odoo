@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!-- Sample tech team -->
+    <record id="dept_engineering" model="hr.department">
+        <field name="name">Engineering</field>
+    </record>
+
+    <record id="emp_somchai" model="hr.employee">
+        <field name="name">Somchai Prasert</field>
+        <field name="job_title">Tech Lead</field>
+        <field name="department_id" ref="dept_engineering"/>
+    </record>
+    <record id="emp_malee" model="hr.employee">
+        <field name="name">Malee Chaiyo</field>
+        <field name="job_title">Backend Developer</field>
+        <field name="department_id" ref="dept_engineering"/>
+        <field name="parent_id" ref="emp_somchai"/>
+    </record>
+    <record id="emp_anan" model="hr.employee">
+        <field name="name">Anan Suwan</field>
+        <field name="job_title">Frontend Developer</field>
+        <field name="department_id" ref="dept_engineering"/>
+        <field name="parent_id" ref="emp_somchai"/>
+    </record>
+    <record id="emp_piyada" model="hr.employee">
+        <field name="name">Piyada Rungrot</field>
+        <field name="job_title">QA Engineer</field>
+        <field name="department_id" ref="dept_engineering"/>
+        <field name="parent_id" ref="emp_somchai"/>
+    </record>
+    <record id="emp_krit" model="hr.employee">
+        <field name="name">Krit Thongdee</field>
+        <field name="job_title">DevOps Engineer</field>
+        <field name="department_id" ref="dept_engineering"/>
+        <field name="parent_id" ref="emp_somchai"/>
+    </record>
+
+    <!-- Closed cycle with finished appraisals -->
+    <record id="cycle_q3" model="tech.appraisal.cycle">
+        <field name="name">Q3 2026</field>
+        <field name="date_start">2026-07-01</field>
+        <field name="date_end">2026-09-30</field>
+        <field name="state">closed</field>
+    </record>
+    <record id="appr_q3_malee" model="tech.appraisal">
+        <field name="cycle_id" ref="cycle_q3"/>
+        <field name="employee_id" ref="emp_malee"/>
+        <field name="state">done</field>
+        <field name="score_technical">5</field>
+        <field name="score_teamwork">4</field>
+        <field name="score_delivery">4</field>
+        <field name="self_comment">Shipped the new billing API and cut p95 latency by 40%.</field>
+        <field name="manager_comment">Strong ownership. Should mentor juniors next quarter.</field>
+    </record>
+    <record id="appr_q3_anan" model="tech.appraisal">
+        <field name="cycle_id" ref="cycle_q3"/>
+        <field name="employee_id" ref="emp_anan"/>
+        <field name="state">done</field>
+        <field name="score_technical">4</field>
+        <field name="score_teamwork">5</field>
+        <field name="score_delivery">3</field>
+        <field name="self_comment">Rebuilt the dashboard UI; two releases slipped.</field>
+        <field name="manager_comment">Great collaborator. Work on estimating tasks.</field>
+    </record>
+
+    <!-- Current cycle in progress, various stages -->
+    <record id="cycle_q4" model="tech.appraisal.cycle">
+        <field name="name">Q4 2026</field>
+        <field name="date_start">2026-10-01</field>
+        <field name="date_end">2026-12-31</field>
+        <field name="state">in_progress</field>
+    </record>
+    <record id="appr_q4_malee" model="tech.appraisal">
+        <field name="cycle_id" ref="cycle_q4"/>
+        <field name="employee_id" ref="emp_malee"/>
+        <field name="state">manager_review</field>
+        <field name="score_technical">5</field>
+        <field name="score_teamwork">4</field>
+        <field name="self_comment">Led migration to PostgreSQL 18 with zero downtime.</field>
+    </record>
+    <record id="appr_q4_anan" model="tech.appraisal">
+        <field name="cycle_id" ref="cycle_q4"/>
+        <field name="employee_id" ref="emp_anan"/>
+        <field name="state">self_review</field>
+    </record>
+    <record id="appr_q4_piyada" model="tech.appraisal">
+        <field name="cycle_id" ref="cycle_q4"/>
+        <field name="employee_id" ref="emp_piyada"/>
+        <field name="state">draft</field>
+    </record>
+    <record id="appr_q4_krit" model="tech.appraisal">
+        <field name="cycle_id" ref="cycle_q4"/>
+        <field name="employee_id" ref="emp_krit"/>
+        <field name="state">draft</field>
+    </record>
+</odoo>
