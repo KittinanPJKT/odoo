@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="tech_appraisal_review_view_list" model="ir.ui.view">
+        <field name="name">tech.appraisal.review.list</field>
+        <field name="model">tech.appraisal.review</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="employee_id"/>
+                <field name="cycle_id"/>
+                <field name="reviewer_id"/>
+                <field name="avg_score"/>
+                <field name="state" widget="badge" decoration-success="state == 'submitted'"
+                       decoration-warning="state == 'draft'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="tech_appraisal_review_view_form" model="ir.ui.view">
+        <field name="name">tech.appraisal.review.form</field>
+        <field name="model">tech.appraisal.review</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <button name="action_submit" type="object" string="Submit Review" class="btn-primary"
+                            invisible="state != 'draft'"/>
+                    <button name="action_reopen" type="object" string="Reopen" invisible="state != 'submitted'"
+                            groups="hr.group_hr_user"/>
+                    <field name="state" widget="statusbar"/>
+                </header>
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="employee_id" readonly="1"/>
+                            <field name="cycle_id" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="reviewer_id" readonly="1"/>
+                            <field name="avg_score"/>
+                        </group>
+                    </group>
+                    <group string="Scores (click the stars)">
+                        <label for="score_technical" string="Technical skill"/>
+                        <div>
+                            <field name="score_technical" widget="priority" nolabel="1" readonly="state == 'submitted'"/>
+                        </div>
+                        <label for="score_teamwork" string="Teamwork"/>
+                        <div>
+                            <field name="score_teamwork" widget="priority" nolabel="1" readonly="state == 'submitted'"/>
+                        </div>
+                        <label for="score_delivery" string="Delivery"/>
+                        <div>
+                            <field name="score_delivery" widget="priority" nolabel="1" readonly="state == 'submitted'"/>
+                        </div>
+                        <label for="score_communication" string="Communication"/>
+                        <div>
+                            <field name="score_communication" widget="priority" nolabel="1" readonly="state == 'submitted'"/>
+                        </div>
+                        <label for="score_ownership" string="Ownership &amp; initiative"/>
+                        <div>
+                            <field name="score_ownership" widget="priority" nolabel="1" readonly="state == 'submitted'"/>
+                        </div>
+                        <label for="score_learning" string="Learning &amp; knowledge sharing"/>
+                        <div>
+                            <field name="score_learning" widget="priority" nolabel="1" readonly="state == 'submitted'"/>
+                        </div>
+                    </group>
+                    <group string="Feedback">
+                        <field name="comment" nolabel="1" colspan="2" readonly="state == 'submitted'"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="tech_appraisal_review_view_search" model="ir.ui.view">
+        <field name="name">tech.appraisal.review.search</field>
+        <field name="model">tech.appraisal.review</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="employee_id"/>
+                <field name="reviewer_id"/>
+                <field name="cycle_id"/>
+                <filter name="todo" string="To Do" domain="[('state', '=', 'draft')]"/>
+                <filter name="submitted" string="Submitted" domain="[('state', '=', 'submitted')]"/>
+                <group>
+                    <filter name="group_employee" string="Reviewed employee" context="{'group_by': 'employee_id'}"/>
+                    <filter name="group_reviewer" string="Reviewer" context="{'group_by': 'reviewer_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="tech_appraisal_review_action_mine" model="ir.actions.act_window">
+        <field name="name">My Reviews</field>
+        <field name="res_model">tech.appraisal.review</field>
+        <field name="view_mode">list,form</field>
+        <field name="domain">[('reviewer_id.user_id', '=', uid)]</field>
+        <field name="context">{'search_default_todo': 1}</field>
+    </record>
+
+    <record id="tech_appraisal_review_action_all" model="ir.actions.act_window">
+        <field name="name">All Reviews</field>
+        <field name="res_model">tech.appraisal.review</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <!-- Extend appraisal form / cycle form -->
+    <record id="tech_appraisal_view_form_reviews" model="ir.ui.view">
+        <field name="name">tech.appraisal.form.reviews</field>
+        <field name="model">tech.appraisal</field>
+        <field name="inherit_id" ref="tech_appraisal_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header/button[@name='action_reset']" position="after">
+                <button name="action_generate_reviews" type="object" string="Request Peer Reviews"
+                        groups="hr.group_hr_user"/>
+            </xpath>
+            <xpath expr="//sheet/group[last()]" position="after">
+                <group string="Peer Reviews">
+                    <field name="review_submitted_count" string="Submitted"/>
+                    <field name="review_count" string="Requested"/>
+                    <field name="peer_avg_score" string="Peer average"/>
+                </group>
+                <notebook groups="hr.group_hr_user">
+                    <page string="Individual Reviews" name="reviews">
+                        <field name="review_ids">
+                            <list>
+                                <field name="reviewer_id"/>
+                                <field name="avg_score"/>
+                                <field name="state" widget="badge"/>
+                            </list>
+                        </field>
+                    </page>
+                </notebook>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="tech_appraisal_view_list_peer" model="ir.ui.view">
+        <field name="name">tech.appraisal.list.peer</field>
+        <field name="model">tech.appraisal</field>
+        <field name="inherit_id" ref="tech_appraisal_view_list"/>
+        <field name="arch" type="xml">
+            <field name="avg_score" position="after">
+                <field name="peer_avg_score"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="tech_appraisal_cycle_view_form_reviews" model="ir.ui.view">
+        <field name="name">tech.appraisal.cycle.form.reviews</field>
+        <field name="model">tech.appraisal.cycle</field>
+        <field name="inherit_id" ref="tech_appraisal_cycle_view_form"/>
+        <field name="arch" type="xml">
+            <button name="action_generate_appraisals" position="after">
+                <button name="action_generate_reviews" type="object" string="Request Peer Reviews"
+                        invisible="state == 'closed'"/>
+            </button>
+        </field>
+    </record>
+</odoo>

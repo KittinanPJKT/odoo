@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!-- Q4: Malee is reviewed by every teammate and the tech lead (2 submitted, 2 pending) -->
+    <record id="rev_q4_malee_somchai" model="tech.appraisal.review">
+        <field name="appraisal_id" ref="appr_q4_malee"/>
+        <field name="reviewer_id" ref="emp_somchai"/>
+        <field name="score_technical">5</field>
+        <field name="score_teamwork">4</field>
+        <field name="score_delivery">5</field>
+        <field name="score_communication">3</field>
+        <field name="score_ownership">4</field>
+        <field name="score_learning">4</field>
+        <field name="comment">Reliable and technically strong. Drove the database migration.</field>
+        <field name="state">submitted</field>
+    </record>
+    <record id="rev_q4_malee_anan" model="tech.appraisal.review">
+        <field name="appraisal_id" ref="appr_q4_malee"/>
+        <field name="reviewer_id" ref="emp_anan"/>
+        <field name="score_technical">4</field>
+        <field name="score_teamwork">5</field>
+        <field name="score_delivery">4</field>
+        <field name="score_communication">4</field>
+        <field name="score_ownership">5</field>
+        <field name="score_learning">3</field>
+        <field name="comment">Always happy to help with API questions.</field>
+        <field name="state">submitted</field>
+    </record>
+    <record id="rev_q4_malee_piyada" model="tech.appraisal.review">
+        <field name="appraisal_id" ref="appr_q4_malee"/>
+        <field name="reviewer_id" ref="emp_piyada"/>
+    </record>
+    <record id="rev_q4_malee_krit" model="tech.appraisal.review">
+        <field name="appraisal_id" ref="appr_q4_malee"/>
+        <field name="reviewer_id" ref="emp_krit"/>
+    </record>
+
+    <!-- Q4: Somchai (tech lead) is reviewed by the whole team -->
+    <record id="appr_q4_somchai" model="tech.appraisal">
+        <field name="cycle_id" ref="cycle_q4"/>
+        <field name="employee_id" ref="emp_somchai"/>
+        <field name="state">draft</field>
+    </record>
+    <record id="rev_q4_somchai_malee" model="tech.appraisal.review">
+        <field name="appraisal_id" ref="appr_q4_somchai"/>
+        <field name="reviewer_id" ref="emp_malee"/>
+        <field name="score_technical">5</field>
+        <field name="score_teamwork">5</field>
+        <field name="score_delivery">4</field>
+        <field name="score_communication">5</field>
+        <field name="score_ownership">4</field>
+        <field name="score_learning">4</field>
+        <field name="comment">Clear direction and great code reviews.</field>
+        <field name="state">submitted</field>
+    </record>
+    <record id="rev_q4_somchai_anan" model="tech.appraisal.review">
+        <field name="appraisal_id" ref="appr_q4_somchai"/>
+        <field name="reviewer_id" ref="emp_anan"/>
+        <field name="score_technical">4</field>
+        <field name="score_teamwork">4</field>
+        <field name="score_delivery">4</field>
+        <field name="score_communication">4</field>
+        <field name="score_ownership">3</field>
+        <field name="score_learning">5</field>
+        <field name="comment">Supportive lead. Could delegate more.</field>
+        <field name="state">submitted</field>
+    </record>
+    <record id="rev_q4_somchai_piyada" model="tech.appraisal.review">
+        <field name="appraisal_id" ref="appr_q4_somchai"/>
+        <field name="reviewer_id" ref="emp_piyada"/>
+    </record>
+    <record id="rev_q4_somchai_krit" model="tech.appraisal.review">
+        <field name="appraisal_id" ref="appr_q4_somchai"/>
+        <field name="reviewer_id" ref="emp_krit"/>
+    </record>
+
+    <!-- Q3: finished peer feedback for Anan -->
+    <record id="rev_q3_anan_somchai" model="tech.appraisal.review">
+        <field name="appraisal_id" ref="appr_q3_anan"/>
+        <field name="reviewer_id" ref="emp_somchai"/>
+        <field name="score_technical">4</field>
+        <field name="score_teamwork">5</field>
+        <field name="score_delivery">3</field>
+        <field name="score_communication">3</field>
+        <field name="score_ownership">5</field>
+        <field name="score_learning">4</field>
+        <field name="comment">Great teammate; estimates need work.</field>
+        <field name="state">submitted</field>
+    </record>
+    <record id="rev_q3_anan_malee" model="tech.appraisal.review">
+        <field name="appraisal_id" ref="appr_q3_anan"/>
+        <field name="reviewer_id" ref="emp_malee"/>
+        <field name="score_technical">4</field>
+        <field name="score_teamwork">5</field>
+        <field name="score_delivery">4</field>
+        <field name="score_communication">5</field>
+        <field name="score_ownership">5</field>
+        <field name="score_learning">4</field>
+        <field name="comment">Clean UI work and very collaborative.</field>
+        <field name="state">submitted</field>
+    </record>
+</odoo>

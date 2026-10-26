@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <menuitem id="menu_tech_appraisal_root" name="Appraisals" parent="hr.menu_hr_root" sequence="25"/>
+    <menuitem id="menu_tech_appraisal_my_reviews" name="My Reviews" parent="menu_tech_appraisal_root"
+              action="tech_appraisal_review_action_mine" sequence="1"/>
     <menuitem id="menu_tech_appraisal" name="Appraisals" parent="menu_tech_appraisal_root"
-              action="tech_appraisal_action" sequence="1"/>
+              action="tech_appraisal_action" sequence="2"/>
+    <menuitem id="menu_tech_appraisal_all_reviews" name="All Reviews" parent="menu_tech_appraisal_root"
+              action="tech_appraisal_review_action_all" sequence="3" groups="hr.group_hr_user"/>
     <menuitem id="menu_tech_appraisal_cycle" name="Cycles" parent="menu_tech_appraisal_root"
-              action="tech_appraisal_cycle_action" sequence="2" groups="hr.group_hr_user"/>
+              action="tech_appraisal_cycle_action" sequence="4" groups="hr.group_hr_user"/>
 </odoo>

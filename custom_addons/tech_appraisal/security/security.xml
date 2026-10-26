@@ -9,6 +9,30 @@
             ('manager_id.user_id', '=', user.id),
             ('employee_id.parent_id.user_id', '=', user.id)]</field>
     </record>
+    <!-- Peer reviews: a reviewer works on their own reviews only -->
+    <record id="rule_review_own" model="ir.rule">
+        <field name="name">Review: my own reviews</field>
+        <field name="model_id" ref="model_tech_appraisal_review"/>
+        <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+        <field name="domain_force">[('reviewer_id.user_id', '=', user.id)]</field>
+    </record>
+    <!-- The appraised employee's manager can read (not edit) the feedback -->
+    <record id="rule_review_manager_read" model="ir.rule">
+        <field name="name">Review: manager reads feedback on reports</field>
+        <field name="model_id" ref="model_tech_appraisal_review"/>
+        <field name="groups" eval="[(4, ref('base.group_user'))]"/>
+        <field name="perm_write" eval="False"/>
+        <field name="perm_create" eval="False"/>
+        <field name="perm_unlink" eval="False"/>
+        <field name="domain_force">[('employee_id.parent_id.user_id', '=', user.id), ('state', '=', 'submitted')]</field>
+    </record>
+    <record id="rule_review_hr_all" model="ir.rule">
+        <field name="name">Review: HR sees all</field>
+        <field name="model_id" ref="model_tech_appraisal_review"/>
+        <field name="groups" eval="[(4, ref('hr.group_hr_user'))]"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+    </record>
+
     <record id="rule_appraisal_hr_all" model="ir.rule">
         <field name="name">Appraisal: HR sees all</field>
         <field name="model_id" ref="model_tech_appraisal"/>

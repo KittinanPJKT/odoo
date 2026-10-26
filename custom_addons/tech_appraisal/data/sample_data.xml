@@ -49,6 +49,9 @@
         <field name="score_technical">5</field>
         <field name="score_teamwork">4</field>
         <field name="score_delivery">4</field>
+        <field name="score_communication">4</field>
+        <field name="score_ownership">4</field>
+        <field name="score_learning">5</field>
         <field name="self_comment">Shipped the new billing API and cut p95 latency by 40%.</field>
         <field name="manager_comment">Strong ownership. Should mentor juniors next quarter.</field>
     </record>
@@ -59,6 +62,9 @@
         <field name="score_technical">4</field>
         <field name="score_teamwork">5</field>
         <field name="score_delivery">3</field>
+        <field name="score_communication">5</field>
+        <field name="score_ownership">3</field>
+        <field name="score_learning">4</field>
         <field name="self_comment">Rebuilt the dashboard UI; two releases slipped.</field>
         <field name="manager_comment">Great collaborator. Work on estimating tasks.</field>
     </record>

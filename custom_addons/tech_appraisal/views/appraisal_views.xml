@@ -43,14 +43,35 @@
                             <field name="manager_id"/>
                         </group>
                     </group>
-                    <group string="Scores">
+                    <group string="Scores (click the stars)">
                         <group>
-                            <field name="score_technical"/>
-                            <field name="score_teamwork"/>
-                            <field name="score_delivery"/>
+                            <label for="score_technical" string="Technical skill"/>
+                            <div>
+                                <field name="score_technical" widget="priority" nolabel="1" readonly="state in ('draft', 'self_review', 'done')"/>
+                            </div>
+                            <label for="score_teamwork" string="Teamwork"/>
+                            <div>
+                                <field name="score_teamwork" widget="priority" nolabel="1" readonly="state in ('draft', 'self_review', 'done')"/>
+                            </div>
+                            <label for="score_delivery" string="Delivery"/>
+                            <div>
+                                <field name="score_delivery" widget="priority" nolabel="1" readonly="state in ('draft', 'self_review', 'done')"/>
+                            </div>
+                            <label for="score_communication" string="Communication"/>
+                            <div>
+                                <field name="score_communication" widget="priority" nolabel="1" readonly="state in ('draft', 'self_review', 'done')"/>
+                            </div>
+                            <label for="score_ownership" string="Ownership &amp; initiative"/>
+                            <div>
+                                <field name="score_ownership" widget="priority" nolabel="1" readonly="state in ('draft', 'self_review', 'done')"/>
+                            </div>
+                            <label for="score_learning" string="Learning &amp; knowledge sharing"/>
+                            <div>
+                                <field name="score_learning" widget="priority" nolabel="1" readonly="state in ('draft', 'self_review', 'done')"/>
+                            </div>
                         </group>
                         <group>
-                            <field name="avg_score"/>
+                            <field name="avg_score" string="Average"/>
                         </group>
                     </group>
                     <group string="Comments">

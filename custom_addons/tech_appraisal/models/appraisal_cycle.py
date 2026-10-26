@@ -42,6 +42,10 @@ class TechAppraisalCycle(models.Model):
         self.env['tech.appraisal'].create(
             [{'cycle_id': self.id, 'employee_id': emp.id} for emp in employees])
 
+    def action_generate_reviews(self):
+        self.ensure_one()
+        self.appraisal_ids.action_generate_reviews()
+
     def action_open_appraisals(self):
         self.ensure_one()
         return {

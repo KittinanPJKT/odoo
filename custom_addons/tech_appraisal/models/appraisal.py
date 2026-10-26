@@ -1,18 +1,10 @@
 from odoo import api, fields, models
 
-SCORES = [
-    ('1', '1 - Poor'),
-    ('2', '2 - Fair'),
-    ('3', '3 - Good'),
-    ('4', '4 - Very good'),
-    ('5', '5 - Excellent'),
-]
-
 
 class TechAppraisal(models.Model):
     _name = 'tech.appraisal'
     _description = 'Employee Appraisal'
-    _inherit = ['mail.thread', 'mail.activity.mixin']
+    _inherit = ['mail.thread', 'mail.activity.mixin', 'tech.appraisal.score.mixin']
     _order = 'cycle_id desc, employee_id'
 
     cycle_id = fields.Many2one('tech.appraisal.cycle', required=True, ondelete='cascade', tracking=True)
@@ -26,13 +18,13 @@ class TechAppraisal(models.Model):
          ('manager_review', 'Manager Review'), ('done', 'Done')],
         default='draft', required=True, tracking=True)
 
-    score_technical = fields.Selection(SCORES, string='Technical skill')
-    score_teamwork = fields.Selection(SCORES, string='Teamwork')
-    score_delivery = fields.Selection(SCORES, string='Delivery')
-    avg_score = fields.Float(compute='_compute_avg_score', store=True, digits=(3, 2))
-
     self_comment = fields.Text(string='Employee comment')
     manager_comment = fields.Text(string='Appraiser comment')
+
+    review_ids = fields.One2many('tech.appraisal.review', 'appraisal_id')
+    review_count = fields.Integer(compute='_compute_peer_stats', store=True)
+    review_submitted_count = fields.Integer(compute='_compute_peer_stats', store=True)
+    peer_avg_score = fields.Float(compute='_compute_peer_stats', store=True, digits=(3, 2))
 
     _employee_cycle_uniq = models.Constraint(
         'UNIQUE(cycle_id, employee_id)', 'An employee can only have one appraisal per cycle.')
@@ -42,11 +34,28 @@ class TechAppraisal(models.Model):
         for rec in self:
             rec.manager_id = rec.employee_id.parent_id
 
-    @api.depends('score_technical', 'score_teamwork', 'score_delivery')
-    def _compute_avg_score(self):
+    @api.depends('review_ids.state', 'review_ids.avg_score')
+    def _compute_peer_stats(self):
+        # sudo: the appraised employee must not see individual reviews, only the aggregate.
         for rec in self:
-            scores = [int(s) for s in (rec.score_technical, rec.score_teamwork, rec.score_delivery) if s]
-            rec.avg_score = sum(scores) / len(scores) if scores else 0.0
+            reviews = rec.review_ids.sudo()
+            submitted = reviews.filtered(lambda r: r.state == 'submitted')
+            rec.review_count = len(reviews)
+            rec.review_submitted_count = len(submitted)
+            rec.peer_avg_score = sum(submitted.mapped('avg_score')) / len(submitted) if submitted else 0.0
+
+    def action_generate_reviews(self):
+        """Ask every teammate (same department) and the direct manager to review the employee."""
+        Review = self.env['tech.appraisal.review']
+        for rec in self:
+            emp = rec.employee_id
+            reviewers = self.env['hr.employee']
+            if emp.department_id:
+                reviewers |= self.env['hr.employee'].search([('department_id', '=', emp.department_id.id)])
+            reviewers |= emp.parent_id
+            reviewers -= emp
+            reviewers -= rec.review_ids.reviewer_id
+            Review.create([{'appraisal_id': rec.id, 'reviewer_id': r.id} for r in reviewers])
 
     @api.depends('employee_id', 'cycle_id')
     def _compute_display_name(self):
