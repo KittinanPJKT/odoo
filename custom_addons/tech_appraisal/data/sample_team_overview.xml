@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!-- Somchai leads Engineering: he gets the team overview tab -->
+    <record id="dept_engineering" model="hr.department">
+        <field name="manager_id" ref="emp_somchai"/>
+    </record>
+
+    <!-- More finished Q3 peer reviews so the closed round has enough responses.
+         Learning is left unscored on these, so that criterion has only 2 respondents
+         and shows the "not enough data" state. -->
+    <record id="rev_q3_malee_somchai" model="tech.appraisal.review">
+        <field name="appraisal_id" ref="appr_q3_malee"/>
+        <field name="reviewer_id" ref="emp_somchai"/>
+        <field name="score_technical">5</field>
+        <field name="score_teamwork">4</field>
+        <field name="score_delivery">4</field>
+        <field name="score_communication">4</field>
+        <field name="score_ownership">5</field>
+        <field name="score_learning">0</field>
+        <field name="state">submitted</field>
+    </record>
+    <record id="rev_q3_malee_anan" model="tech.appraisal.review">
+        <field name="appraisal_id" ref="appr_q3_malee"/>
+        <field name="reviewer_id" ref="emp_anan"/>
+        <field name="score_technical">4</field>
+        <field name="score_teamwork">5</field>
+        <field name="score_delivery">4</field>
+        <field name="score_communication">3</field>
+        <field name="score_ownership">4</field>
+        <field name="score_learning">0</field>
+        <field name="state">submitted</field>
+    </record>
+    <record id="rev_q3_malee_piyada" model="tech.appraisal.review">
+        <field name="appraisal_id" ref="appr_q3_malee"/>
+        <field name="reviewer_id" ref="emp_piyada"/>
+        <field name="score_technical">5</field>
+        <field name="score_teamwork">4</field>
+        <field name="score_delivery">3</field>
+        <field name="score_communication">4</field>
+        <field name="score_ownership">4</field>
+        <field name="score_learning">0</field>
+        <field name="state">submitted</field>
+    </record>
+    <record id="rev_q3_malee_krit" model="tech.appraisal.review">
+        <field name="appraisal_id" ref="appr_q3_malee"/>
+        <field name="reviewer_id" ref="emp_krit"/>
+        <field name="score_technical">4</field>
+        <field name="score_teamwork">4</field>
+        <field name="score_delivery">4</field>
+        <field name="score_communication">5</field>
+        <field name="score_ownership">3</field>
+        <field name="score_learning">0</field>
+        <field name="state">submitted</field>
+    </record>
+    <record id="rev_q3_anan_piyada" model="tech.appraisal.review">
+        <field name="appraisal_id" ref="appr_q3_anan"/>
+        <field name="reviewer_id" ref="emp_piyada"/>
+        <field name="score_technical">3</field>
+        <field name="score_teamwork">5</field>
+        <field name="score_delivery">3</field>
+        <field name="score_communication">4</field>
+        <field name="score_ownership">4</field>
+        <field name="score_learning">0</field>
+        <field name="state">submitted</field>
+    </record>
+    <record id="rev_q3_anan_krit" model="tech.appraisal.review">
+        <field name="appraisal_id" ref="appr_q3_anan"/>
+        <field name="reviewer_id" ref="emp_krit"/>
+        <field name="score_technical">4</field>
+        <field name="score_teamwork">4</field>
+        <field name="score_delivery">2</field>
+        <field name="score_communication">3</field>
+        <field name="score_ownership">3</field>
+        <field name="score_learning">0</field>
+        <field name="state">submitted</field>
+    </record>
+</odoo>

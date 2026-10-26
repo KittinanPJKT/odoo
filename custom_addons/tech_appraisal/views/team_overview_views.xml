@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="tech_appraisal_team_overview_view_form" model="ir.ui.view">
+        <field name="name">tech.appraisal.team.overview.form</field>
+        <field name="model">tech.appraisal.team.overview</field>
+        <field name="arch" type="xml">
+            <form create="0" edit="0" delete="0" duplicate="0">
+                <sheet>
+                    <notebook groups="tech_appraisal.group_team_lead">
+                        <page string="Team Overview" name="team_overview">
+                            <field name="summary_html" nolabel="1"/>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="tech_appraisal_team_overview_action" model="ir.actions.server">
+        <field name="name">Team Overview</field>
+        <field name="model_id" ref="model_tech_appraisal_team_overview"/>
+        <field name="state">code</field>
+        <field name="code">action = model.action_open()</field>
+    </record>
+
+    <menuitem id="menu_tech_appraisal_team_overview" name="Team Overview" parent="menu_tech_appraisal_root"
+              action="tech_appraisal_team_overview_action" sequence="5"
+              groups="tech_appraisal.group_team_lead"/>
+</odoo>

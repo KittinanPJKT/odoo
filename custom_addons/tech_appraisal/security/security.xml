@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <!-- Granted automatically to the user of whoever is set as Manager of a department -->
+    <record id="group_team_lead" model="res.groups">
+        <field name="name">Appraisal: Team Lead</field>
+        <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+        <field name="comment">Can see the anonymous team overview of the department they manage.</field>
+    </record>
+
     <record id="rule_appraisal_own_or_team" model="ir.rule">
         <field name="name">Appraisal: own or direct reports</field>
         <field name="model_id" ref="model_tech_appraisal"/>

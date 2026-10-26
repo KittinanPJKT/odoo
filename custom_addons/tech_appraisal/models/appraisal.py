@@ -4,7 +4,7 @@ from odoo import api, fields, models
 class TechAppraisal(models.Model):
     _name = 'tech.appraisal'
     _description = 'Employee Appraisal'
-    _inherit = ['mail.thread', 'mail.activity.mixin', 'tech.appraisal.score.mixin']
+    _inherit = ['mail.thread', 'mail.activity.mixin', 'tech.appraisal.score.mixin', 'tech.appraisal.lock.mixin']
     _order = 'cycle_id desc, employee_id'
 
     cycle_id = fields.Many2one('tech.appraisal.cycle', required=True, ondelete='cascade', tracking=True)
@@ -13,6 +13,7 @@ class TechAppraisal(models.Model):
     manager_id = fields.Many2one(
         'hr.employee', string='Appraiser', compute='_compute_manager_id', store=True, readonly=False)
     company_id = fields.Many2one(related='cycle_id.company_id', store=True)
+    cycle_state = fields.Selection(related='cycle_id.state')
     state = fields.Selection(
         [('draft', 'Draft'), ('self_review', 'Self Review'),
          ('manager_review', 'Manager Review'), ('done', 'Done')],
@@ -28,6 +29,12 @@ class TechAppraisal(models.Model):
 
     _employee_cycle_uniq = models.Constraint(
         'UNIQUE(cycle_id, employee_id)', 'An employee can only have one appraisal per cycle.')
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        cycles = self.env['tech.appraisal.cycle'].browse([v['cycle_id'] for v in vals_list if v.get('cycle_id')])
+        self._check_cycle_open(cycles)
+        return super().create(vals_list)
 
     @api.depends('employee_id.parent_id')
     def _compute_manager_id(self):
