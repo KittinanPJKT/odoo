@@ -1,0 +1,12 @@
+# Used by `docker build` for the Dockerfile next to it (keeps the build context small).
+venv/
+.git/
+.github/
+**/__pycache__/
+**/*.pyc
+*.log
+.env
+.env.*
+odoo/filestore/
+doc/
+debian/

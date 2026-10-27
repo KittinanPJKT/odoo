@@ -1,0 +1,62 @@
+# Local development / test stack: Odoo 19 + PostgreSQL.
+#   cp docker/env.example .env      (then edit the passwords)
+#   docker compose --profile init run --rm init     first time only: create the database
+#   docker compose up -d                            start the web server
+# See docker/README.md for the details.
+name: tech-appraisal
+
+x-odoo: &odoo
+  build: .
+  image: tech-appraisal-odoo:dev
+  environment:
+    DB_HOST: db
+    DB_USER: ${DB_USER:-odoo}
+    DB_PASSWORD: ${DB_PASSWORD:?Set DB_PASSWORD in .env (copy docker/env.example)}
+    ODOO_DB: ${ODOO_DB:-odoo}
+    ODOO_MODULES: ${ODOO_MODULES:-hr,tech_appraisal,project,hr_timesheet,hr_holidays}
+    DEMO_PASSWORD: ${DEMO_PASSWORD:-demo1234}
+  volumes:
+    - odoo-data:/var/lib/odoo
+    # our modules are mounted so that code changes show up without rebuilding the image
+    - ./custom_addons:/opt/odoo/custom_addons
+  depends_on:
+    db:
+      condition: service_healthy
+
+services:
+  db:
+    image: postgres:17
+    environment:
+      POSTGRES_USER: ${DB_USER:-odoo}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?Set DB_PASSWORD in .env (copy docker/env.example)}
+      POSTGRES_DB: postgres
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-odoo} -d postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    restart: unless-stopped
+
+  odoo:
+    <<: *odoo
+    command: ["serve"]
+    ports:
+      - "${ODOO_PORT:-8069}:8069"
+    restart: unless-stopped
+
+  # One-off jobs, started explicitly with --profile:
+  init:
+    <<: *odoo
+    command: ["init"]
+    profiles: ["init"]
+
+  test:
+    <<: *odoo
+    command: ["test"]
+    profiles: ["test"]
+
+volumes:
+  db-data:
+  odoo-data:
